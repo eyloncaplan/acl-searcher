@@ -52,4 +52,4 @@ Feel free to open an issue or submit a pull request for improvements!
 ---
 
 ## **License**
-[MIT License](LICENSE) (Replace with your project's actual license.)
+[MIT License](LICENSE)
