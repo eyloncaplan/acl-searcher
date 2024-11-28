@@ -1,0 +1,5 @@
+bibtexparser==1.4.2
+Flask==3.1.0
+matplotlib==3.8.4
+pandas==2.2.3
+ragatouille==0.0.8.post4
