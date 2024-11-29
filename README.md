@@ -19,7 +19,7 @@ Follow these steps to set up your environment and install the necessary dependen
 
 1. Create a new Conda environment with Python 3.12.3:
    ```bash
-   conda create -n acl-searcher python=3.12.3
+   conda create env -f acl-searcher.yml
    ```
 
 2. Activate the Conda environment:
