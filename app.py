@@ -1,9 +1,18 @@
+print("Importing Flask...")
 from flask import Flask, request, render_template
+print("Flask imported successfully.")
+
+print("Importing RAGPretrainedModel from ragatouille (this might take a while)...")
+from ragatouille import RAGPretrainedModel
+print("RAGPretrainedModel imported successfully.")
+
+# Other imports (not expected to take long)
 import argparse
 import logging
 import sys
 import os
-from ragatouille import RAGPretrainedModel
+
+print("All necessary imports completed.")
 
 # Initialize Flask app
 app = Flask(__name__)
