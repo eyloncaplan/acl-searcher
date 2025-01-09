@@ -121,3 +121,4 @@ def cli_mode():
 if __name__ == "__main__":
     print("Script starting...")
     cli_mode()
+
