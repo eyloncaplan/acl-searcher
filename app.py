@@ -1,20 +1,25 @@
-print("Importing Flask...")
-from flask import Flask, request, render_template
-print("Flask imported successfully.")
+print("Importing Streamlit...")
+import streamlit as st
+print("Streamlit imported successfully.")
 
 print("Importing RAGPretrainedModel from ragatouille (this might take a while)...")
 from ragatouille import RAGPretrainedModel
 print("RAGPretrainedModel imported successfully.")
 
+<<<<<<< HEAD
 # Other imports
 import argparse
 import logging
+=======
+# Other imports (not expected to take long)
+>>>>>>> b8d4af8bf8ae478124c6948e115bc6bdfaa3337d
 import sys
 import os
 import pandas as pd
 
 print("All necessary imports completed.")
 
+<<<<<<< HEAD
 app = Flask(__name__)
 
 # Global variable
@@ -27,6 +32,13 @@ def init_engine():
     index_name = "paper_abstracts_old"
     index_path = os.path.join(base_dir, "data", ".ragatouille", "colbert", "indexes", index_name)
 
+=======
+# Initialize the engine
+def init_engine():
+    print("Initializing the engine...")
+    index_name = "paper_abstracts"
+    index_path = f"data/.ragatouille/colbert/indexes/{index_name}"
+>>>>>>> b8d4af8bf8ae478124c6948e115bc6bdfaa3337d
 
     original_stdout = sys.stdout
     sys.stdout = open(os.devnull, 'w')  # Redirect stdout to suppress library output
@@ -41,7 +53,7 @@ def init_engine():
             break
         except Exception as e:
             sys.stdout = original_stdout
-            logging.error(f"Failed to make index on attempt {i + 1}: {e}")
+            print(f"Failed to make index on attempt {i + 1}: {e}")
             if i == 4:
                 print("Failed to initialize the engine after 5 attempts.")
             else:
@@ -51,9 +63,14 @@ def init_engine():
 
 engine = init_engine()
 
+<<<<<<< HEAD
 # Load data (ensure 'year' column is present in your CSV)
 csv_path = os.path.join(base_dir, "data", "anthology+abstracts.csv")
 data = pd.read_csv(csv_path)
+=======
+# Load data for detailed retrieval
+data = pd.read_csv('data/anthology+abstracts.csv')
+>>>>>>> b8d4af8bf8ae478124c6948e115bc6bdfaa3337d
 data = data.dropna(subset=['abstract'])
 
 def query_engine(engine, query, k=5):
@@ -63,6 +80,7 @@ def query_engine(engine, query, k=5):
     print("Query processed successfully.")
     return results
 
+<<<<<<< HEAD
 def get_paper_details(results, min_year=0):
     """
     Return the paper info in the same order as 'results' from the search engine,
@@ -150,7 +168,40 @@ def cli_mode():
         console_mode()
     else:
         print("Please specify either --console to run in interactive console mode or --web to run the web interface.")
+=======
+def retrieve_paper_details(results):
+    print("Retrieving paper details...")
+    retrieved_df = data[data['abstract'].apply(lambda x: any(result in x for result in results))]
+    return retrieved_df
+
+# Streamlit UI
+def streamlit_interface():
+    st.title("Research Paper Search Engine")
+    st.markdown("Enter your query below to search the database for relevant papers.")
+
+    # Input widgets
+    query = st.text_input("Enter your search query:")
+    k = st.slider("Number of results to retrieve:", min_value=1, max_value=20, value=5)
+
+    # Process query on button click
+    if st.button("Search"):
+        if not query:
+            st.warning("Please enter a query to search.")
+        else:
+            with st.spinner("Searching..."):
+                results = query_engine(engine, query, k=k)
+                retrieved_df = retrieve_paper_details(results)
+
+                if retrieved_df.empty:
+                    st.error("No matching papers found.")
+                else:
+                    st.success(f"Found {len(retrieved_df)} papers.")
+                    for i, row in retrieved_df.iterrows():
+                        st.markdown(f"### {row['title']}")
+                        st.markdown(f"**Year:** {row['year']}  \n**Authors:** {row['author']}  \n**Venue:** {row['booktitle']}  \n**Abstract:** {row['abstract']}  ")
+                        st.markdown("---")
+>>>>>>> b8d4af8bf8ae478124c6948e115bc6bdfaa3337d
 
 if __name__ == "__main__":
-    print("Script starting...")
-    cli_mode()
+    streamlit_interface()
+
