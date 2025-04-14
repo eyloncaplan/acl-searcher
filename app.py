@@ -6,26 +6,27 @@ print("Importing RAGPretrainedModel from ragatouille (this might take a while)..
 from ragatouille import RAGPretrainedModel
 print("RAGPretrainedModel imported successfully.")
 
-# Other imports (not expected to take long)
+# Other imports
 import argparse
 import logging
 import sys
 import os
-import pandas as pd  # Import pandas for data handling
+import pandas as pd
 
 print("All necessary imports completed.")
 
-# Initialize Flask app
 app = Flask(__name__)
 
-# Global variables
+# Global variable
 K = None
+base_dir = os.path.dirname(os.path.abspath(__file__))
 
-# Initialize the engine
 def init_engine():
     print("Initializing the engine...")
-    index_name = "paper_abstracts"
-    index_path = f"/homes/ecaplan/acl-searcher/data/.ragatouille/colbert/indexes/{index_name}"
+    # index_name = "paper_abstracts"
+    index_name = "paper_abstracts_old"
+    index_path = os.path.join(base_dir, "data", ".ragatouille", "colbert", "indexes", index_name)
+
 
     original_stdout = sys.stdout
     sys.stdout = open(os.devnull, 'w')  # Redirect stdout to suppress library output
@@ -48,58 +49,90 @@ def init_engine():
     sys.stdout = original_stdout  # Restore stdout
     return engine
 
-engine = init_engine()  # Initialize the engine once and reuse it
+engine = init_engine()
 
-data = pd.read_csv('/homes/ecaplan/acl-searcher/data/anthology+abstracts.csv')  # Load data for detailed retrieval
+# Load data (ensure 'year' column is present in your CSV)
+csv_path = os.path.join(base_dir, "data", "anthology+abstracts.csv")
+data = pd.read_csv(csv_path)
 data = data.dropna(subset=['abstract'])
 
-# Query the engine
 def query_engine(engine, query, k=5):
     print(f"Processing query: {query}")
     results = engine.search(query, k=k)
-    results = [result['content'] for result in results]
+    results = [result['content'] for result in results]  # Just the text
     print("Query processed successfully.")
     return results
 
-def display_results(results):
-    print("Retrieving paper details...")
-    retrieved_df = data[data['abstract'].apply(lambda x: any(result in x for result in results))]
-    for i, row in retrieved_df.iterrows():
-        print(f"Title: {row['title']}")
-        print(f"Year: {row['year']}")
-        print(f"Authors: {row['author']}")
-        print(f"Abstract: {row['abstract']}")
-        print(f"Venue: {row['booktitle']}")
-        print()
+def get_paper_details(results, min_year=0):
+    """
+    Return the paper info in the same order as 'results' from the search engine,
+    but only for those papers with 'year' >= min_year.
+    """
+    papers = []
+    for abstract in results:
+        # Filter for matching abstracts AND year >= min_year
+        matching_rows = data[(data['abstract'] == abstract) & (data['year'] >= min_year)]
+        if not matching_rows.empty:
+            row = matching_rows.iloc[0]  # Take the first match
+            papers.append({
+                'title': row['title'],
+                'year': row['year'],
+                'authors': row['author'],
+                'venue': row['booktitle'],
+                'abstract': row['abstract'],
+                'url': row.get('url', '')  # Handle missing or empty URLs
+            })
+    return papers
 
-# Web interface
 @app.route("/", methods=["GET", "POST"])
 def index():
-    result = None
-    query = None
-    if request.method == "POST":
-        query = request.form.get("query")  # Get query from form input
-        print(f"Received query via web interface: {query}")
-        result = query_engine(engine, query, k=K)  # Process query
-    return render_template("index.html", query=query, result=result)
+    query = ""
+    k_val = 5          # Default number of results
+    min_year_val = 0   # Default min year (filter out papers older than this)
+    papers = []
 
-# Console Mode (Interactive)
+    if request.method == "POST":
+        query = request.form.get("query", "")
+        k_val = request.form.get("k", type=int, default=5)
+        min_year_val = request.form.get("min_year", type=int, default=0)
+
+        print(f"Received query: {query} | k={k_val} | min_year={min_year_val}")
+
+        if query.strip():
+            # Query the engine
+            results = query_engine(engine, query, k=k_val)
+            # Convert results to structured data, filtering out older papers
+            papers = get_paper_details(results, min_year=min_year_val)
+
+    return render_template(
+        "index.html",
+        query=query,
+        k_val=k_val,
+        min_year_val=min_year_val,
+        papers=papers
+    )
+
 def console_mode():
-    print("Starting interactive console mode. Type 'exit' to quit.")
+    print("\n" * 100)
+    print("============================================")
+    print(" Welcome to the Interactive Console Mode ")
+    print(" Type 'exit' to quit at any time ")
+    print("============================================\n")
+
     while True:
         query = input("Enter your query: ").strip()
         if query.lower() == "exit":
-            print("Exiting console mode. Goodbye!")
+            print("\nExiting console mode. Goodbye!")
             break
         if not query:
-            print("Empty query. Please enter a valid query or type 'exit' to quit.")
+            print("Empty query. Please enter a valid query or type 'exit' to quit.\n")
             continue
-        print("Searching...")
-        results = query_engine(engine, query, k=K)
-        display_results(results)
-        print("---")
 
-# CLI Mode
+        print("\nSearching...")
+        results = query_engine(engine, query, k=K)
+        # Just print results or do something else
+        print(results)
+
 def cli_mode():
     parser = argparse.ArgumentParser(description="Run the search engine in console or web mode.")
     parser.add_argument("--console", action="store_true", help="Run the search engine in interactive console mode")
@@ -112,9 +145,9 @@ def cli_mode():
 
     if args.web:
         print("Starting the web interface...")
-        app.run(debug=True)  # Start the Flask app
+        app.run(host="0.0.0.0", port=5000, debug=True)
     elif args.console:
-        console_mode()  # Run console mode
+        console_mode()
     else:
         print("Please specify either --console to run in interactive console mode or --web to run the web interface.")
 

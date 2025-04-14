@@ -1,1 +1,3 @@
-ragatouille==0.0.8.post2
+ragatouille
+Flask
+pandas
