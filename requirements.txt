@@ -1,9 +1,12 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 ragatouille
 Flask
 pandas
 =======
+=======
+>>>>>>> b8d4af8bf8ae478124c6948e115bc6bdfaa3337d
 =======
 >>>>>>> b8d4af8bf8ae478124c6948e115bc6bdfaa3337d
 aiohappyeyeballs==2.4.4
@@ -160,6 +163,9 @@ xxhash==3.5.0
 yarl==1.18.3
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+>>>>>>> b8d4af8bf8ae478124c6948e115bc6bdfaa3337d
+=======
 >>>>>>> b8d4af8bf8ae478124c6948e115bc6bdfaa3337d
 =======
 >>>>>>> b8d4af8bf8ae478124c6948e115bc6bdfaa3337d

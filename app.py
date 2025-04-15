@@ -8,9 +8,13 @@ print("RAGPretrainedModel imported successfully.")
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 # Other imports
 import argparse
 import logging
+=======
+# Other imports (not expected to take long)
+>>>>>>> b8d4af8bf8ae478124c6948e115bc6bdfaa3337d
 =======
 # Other imports (not expected to take long)
 >>>>>>> b8d4af8bf8ae478124c6948e115bc6bdfaa3337d
@@ -23,6 +27,7 @@ import pandas as pd
 
 print("All necessary imports completed.")
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 app = Flask(__name__)
@@ -40,12 +45,17 @@ def init_engine():
 =======
 =======
 >>>>>>> b8d4af8bf8ae478124c6948e115bc6bdfaa3337d
+=======
+>>>>>>> b8d4af8bf8ae478124c6948e115bc6bdfaa3337d
 # Initialize the engine
 def init_engine():
     print("Initializing the engine...")
     index_name = "paper_abstracts"
     index_path = f"data/.ragatouille/colbert/indexes/{index_name}"
 <<<<<<< HEAD
+<<<<<<< HEAD
+>>>>>>> b8d4af8bf8ae478124c6948e115bc6bdfaa3337d
+=======
 >>>>>>> b8d4af8bf8ae478124c6948e115bc6bdfaa3337d
 =======
 >>>>>>> b8d4af8bf8ae478124c6948e115bc6bdfaa3337d
@@ -75,9 +85,14 @@ engine = init_engine()
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 # Load data (ensure 'year' column is present in your CSV)
 csv_path = os.path.join(base_dir, "data", "anthology+abstracts.csv")
 data = pd.read_csv(csv_path)
+=======
+# Load data for detailed retrieval
+data = pd.read_csv('data/anthology+abstracts.csv')
+>>>>>>> b8d4af8bf8ae478124c6948e115bc6bdfaa3337d
 =======
 # Load data for detailed retrieval
 data = pd.read_csv('data/anthology+abstracts.csv')
@@ -95,6 +110,7 @@ def query_engine(engine, query, k=5):
     print("Query processed successfully.")
     return results
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 def get_paper_details(results, min_year=0):
@@ -233,6 +249,31 @@ def streamlit_interface():
                 retrieved_df = retrieve_paper_details(results)
 
 >>>>>>> b8d4af8bf8ae478124c6948e115bc6bdfaa3337d
+=======
+def retrieve_paper_details(results):
+    print("Retrieving paper details...")
+    retrieved_df = data[data['abstract'].apply(lambda x: any(result in x for result in results))]
+    return retrieved_df
+
+# Streamlit UI
+def streamlit_interface():
+    st.title("Research Paper Search Engine")
+    st.markdown("Enter your query below to search the database for relevant papers.")
+
+    # Input widgets
+    query = st.text_input("Enter your search query:")
+    k = st.slider("Number of results to retrieve:", min_value=1, max_value=20, value=5)
+
+    # Process query on button click
+    if st.button("Search"):
+        if not query:
+            st.warning("Please enter a query to search.")
+        else:
+            with st.spinner("Searching..."):
+                results = query_engine(engine, query, k=k)
+                retrieved_df = retrieve_paper_details(results)
+
+>>>>>>> b8d4af8bf8ae478124c6948e115bc6bdfaa3337d
                 if retrieved_df.empty:
                     st.error("No matching papers found.")
                 else:
@@ -242,6 +283,9 @@ def streamlit_interface():
                         st.markdown(f"**Year:** {row['year']}  \n**Authors:** {row['author']}  \n**Venue:** {row['booktitle']}  \n**Abstract:** {row['abstract']}  ")
                         st.markdown("---")
 <<<<<<< HEAD
+<<<<<<< HEAD
+>>>>>>> b8d4af8bf8ae478124c6948e115bc6bdfaa3337d
+=======
 >>>>>>> b8d4af8bf8ae478124c6948e115bc6bdfaa3337d
 =======
 >>>>>>> b8d4af8bf8ae478124c6948e115bc6bdfaa3337d
