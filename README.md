@@ -1,48 +1,30 @@
-# acl-searcher
+# ACL Searcher
 
 ## **Overview**
-Simple interface for advanced search of papers in the ACL circuit
+Simple interface for advanced semantic search of papers in the ACL circuit using the ColBERT retriever on paper abstracts. Up to date through January, 2025. Papers and abstracts are taken directly from the ACL master bib file, and we will try to update the index to contain the newest papers as often as we can.
 
 ---
 
 ## **Setup Instructions**
 
-Follow these steps to set up your environment and install the necessary dependencies.
-
-### **1. Prerequisites**
-- Ensure you have conda
-- Python version: `3.12.3` (other versions are not tested)
-
----
-
-### **2. Create a Conda Environment**
-
-1. Create a new Conda environment with Python 3.12.3:
-   ```bash
-   conda create env -f acl-searcher.yml
-   ```
-
-2. Activate the Conda environment:
-   ```bash
-   conda activate acl-searcher
-   ```
-
----
-
-### **3. Install Dependencies**
-
-1. Use `pip` to install the libraries listed in `requirements.txt`:
+Clone the repo, and then use `pip` to install the libraries listed in `requirements.txt`:
    ```bash
    pip install -r requirements.txt
    ```
-   
+
 ---
 
 ## **Usage**
-Explain how to use your project here. For example:
+1. Run the application on the host server (make sure your host exposes the 5000 port, or change it with the `--port` flag):
 ```bash
-python main.py
+python app.py --web
 ```
+2. Using a browser, connect to
+
+```bash
+http://YOUR.HOST.IP.ADDRESS:5000
+```
+3. Use the interface to search!
 
 ---
 
