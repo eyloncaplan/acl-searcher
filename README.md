@@ -1,7 +1,7 @@
 # ACL Searcher
 
 ## **Overview**
-Simple interface for advanced semantic search of papers in the ACL circuit using the ColBERT retriever on paper abstracts. Up to date through January, 2025. Papers and abstracts are taken directly from the ACL master bib file, and we will try to update the index to contain the newest papers as often as we can.
+Simple interface for advanced semantic search of papers in the ACL circuit using the ColBERT retriever on paper abstracts. Up to date through January, 2025. Papers and abstracts are taken directly from the ACL master bib file, and we will try to update the index to contain the newest papers as often as we can. Note that (1) GPUs are **not** required, and (2) papers are indexed based on their **abstract**, so the tool is not for searching authors/titles. Rather, it's for finding the most relevant papers to any claim, research question, topic, direction, etc.
 
 ---
 
