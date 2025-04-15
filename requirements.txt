@@ -1,3 +1,4 @@
 ragatouille
 Flask
 pandas
+transformers==4.48.1
