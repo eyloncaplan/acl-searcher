@@ -7,10 +7,15 @@ Simple interface for advanced semantic search of papers in the ACL circuit using
 
 ## **Setup Instructions**
 
-Clone the repo, and then use `pip` to install the libraries listed in `requirements.txt`:
-   ```bash
-   pip install -r requirements.txt
-   ```
+1. Clone the repo, and then use `pip` to install the libraries listed in `requirements.txt`:
+```bash
+pip install -r requirements.txt
+```
+2. Download the latest data:
+```bash
+chmod +x download_data.sh
+./download_data.sh
+```
 
 ---
 
@@ -25,6 +30,11 @@ python app.py --web
 http://YOUR.HOST.IP.ADDRESS:5000
 ```
 3. Use the interface to search!
+
+If your host does not allow you to expose a port, then you can run the console version:
+```bash
+python app.py --console
+```
 
 ---
 
