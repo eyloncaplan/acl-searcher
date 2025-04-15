@@ -3,3 +3,4 @@ Flask
 pandas
 transformers==4.48.1
 psutil
+gdown
